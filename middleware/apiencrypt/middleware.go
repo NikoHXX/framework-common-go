@@ -3,7 +3,7 @@
 // RSA 协商 AES 密钥、AES 加解密报文体：POST/PUT 命中注解且带密钥头则用配置的 RSA 私钥解出
 // AES 密钥并解密请求体，可选再用公钥随机生成 AES 密钥加密响应体。!Enabled 时中间件直通。
 //
-// 自包含、不引 ruoyi-core/middleware 与 ruoyi-core/model/response：失败用 fmt 直写 {code,msg,data} JSON，
+// 自包含、不引 framework-core/middleware 与 framework-core/model/response：失败用 fmt 直写 {code,msg,data} JSON，
 // 不走 errs + 全局 Recover 兜底，免去 errs 依赖与「Abort 后等 Recover 才落响应」的隐式时序。
 // 响应码与原 errs 路径一致：缺密钥头 403，解密/加密失败回落 500。
 package apiencrypt
@@ -205,7 +205,7 @@ func unwrapJSONString(b []byte) string {
 	return string(b)
 }
 
-// failBody 失败响应体，形态同 ruoyi-core/model/response.R（Data 恒为 null）。
+// failBody 失败响应体，形态同 framework-core/model/response.R（Data 恒为 null）。
 // 用结构体而非 fmt 拼串：msg 含引号时拼串会产出非法 JSON。
 type failBody struct {
 	Code int    `json:"code"`
@@ -214,7 +214,7 @@ type failBody struct {
 }
 
 // writeFail 直写失败 JSON 并终止链：HTTP 恒 200，body code/msg 由参数给。
-// 不引 ruoyi-core/model/response，与本包自包含的约定一致。
+// 不引 framework-core/model/response，与本包自包含的约定一致。
 func writeFail(c *gin.Context, code int, msg string) {
 	c.AbortWithStatusJSON(http.StatusOK, failBody{Code: code, Msg: msg})
 }

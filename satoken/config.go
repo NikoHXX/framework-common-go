@@ -27,7 +27,7 @@ type SATokenConfig struct {
 	ActiveTimeout int64 `mapstructure:"activeTimeout"`
 	// DynamicActiveTimeout 是否允许按客户端覆盖上面两个超时。
 	//
-	// RuoYi 的 sys_client 表按客户端配 timeout / active_timeout，需要本项为 true 才生效。
+	// JAVA 的 sys_client 表按客户端配 timeout / active_timeout，需要本项为 true 才生效。
 	DynamicActiveTimeout bool `mapstructure:"dynamicActiveTimeout"`
 }
 

@@ -4,7 +4,7 @@
 `gin.BodyBytesKey`，让后续中间件（XSS 清洗、访问日志、加密解密、防重提交指纹） 与 handler 都能重复读 body。超出 `MaxBodySize`
 的请求直接拒绝。
 
-对应原 `ruoyi-core/middleware/body.go`，抽出为独立包。
+对应原 `framework-core/middleware/body.go`，抽出为独立包。
 
 ## 用法
 

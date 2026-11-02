@@ -1,6 +1,6 @@
 // Package database 多数据源 GORM 初始化与包级默认实例访问。
 //
-// 形态对照 Java RuoYi 的 spring.datasource.dynamic：primary 指定默认数据源，
+// 形态对照 Java 的 spring.datasource.dynamic：primary 指定默认数据源，
 // DB() 返回它；strict=true 时 DBByName 命中不到名字直接报错，否则回退 primary。
 // 驱动按 type 分派，mysql/postgres/sqlserver 默认编译进包，oracle 经 -tags oracle 启用。
 //

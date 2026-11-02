@@ -1,8 +1,8 @@
 # repeatsubmit
 
-防重复提交注解（装饰器），防重键存 Redis。对应 Java RuoYi 的 `@RepeatSubmit` 注解。
+防重复提交注解（装饰器），防重键存 Redis。对应 Java 的 `@RepeatSubmit` 注解。
 
-对应原 `ruoyi-core/repeatsubmit`，抽出为独立包，与 `ratelimiter` 同属注解型中间件。
+对应原 `framework-core/repeatsubmit`，抽出为独立包，与 `ratelimiter` 同属注解型中间件。
 
 ## 初始化
 

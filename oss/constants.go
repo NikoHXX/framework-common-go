@@ -4,7 +4,7 @@ import "time"
 
 // 对象存储相关的 Redis key 与缓存组常量。
 //
-// 从 ruoyi-core/constant 迁入，使 oss 包不再依赖 ruoyi-core，配合 pkg/cache 使用。
+// 从 framework-core/constant 迁入，使 oss 包不再依赖 framework-core，配合 pkg/cache 使用。
 const (
 	// OssDefaultConfigKey 当前生效的对象存储配置键，值是 sys_oss_config.config_key。
 	// 与 CacheSysOssConfig 缓存组分工：那边存各配置的完整 JSON，这里只记用哪一个。

@@ -68,7 +68,7 @@ func isJSONRequest(c *gin.Context) bool {
 	return strings.HasPrefix(strings.ToLower(c.ContentType()), contentTypeJSON)
 }
 
-// traceIDKey 与 ruoyi-core/middleware.TraceIDKey 同值。logTracePrefix 在 ruoyi-core/middleware
+// traceIDKey 与 framework-core/middleware.TraceIDKey 同值。logTracePrefix 在 framework-core/middleware
 // 中未导出，这里就地复刻一份，不为本包单独引一个 middleware 依赖。
 const traceIDKey = "traceId"
 

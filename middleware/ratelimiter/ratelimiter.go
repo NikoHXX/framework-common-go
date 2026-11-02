@@ -15,11 +15,11 @@ import (
 	goredis "github.com/redis/go-redis/v9"
 )
 
-// codeFail 业务失败码，与 ruoyi-core/model/response.CodeFail 同值；限流触发时回此码。
-// 就地定义避免引 ruoyi-core/model/response 包。
+// codeFail 业务失败码，与 framework-core/model/response.CodeFail 同值；限流触发时回此码。
+// 就地定义避免引 framework-core/model/response 包。
 const codeFail = 500
 
-// failBody 失败响应体，形态同 ruoyi-core/model/response.R（Data 恒为 null）。
+// failBody 失败响应体，形态同 framework-core/model/response.R（Data 恒为 null）。
 // 用结构体而非 fmt 拼串：message 可由调用方自定义，含引号时拼串会产出非法 JSON。
 type failBody struct {
 	Code int    `json:"code"`

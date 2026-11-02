@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/domain"
+	"github.com/NikoHXX/framework-common-go/framework-core/domain"
 )
 
 // LoginUser 登录用户上下文对象，保存当前会话的身份、权限和终端信息。

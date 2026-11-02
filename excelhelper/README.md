@@ -28,7 +28,7 @@ import "github.com/NikoHXX/framework-common-go/excelhelper"
 
 // Export 把 rows 写成 xlsx 附件直接写进 gin 响应，sheetName 同时作下载文件名主体。
 if err := excelhelper.Export(c, rows, "客户端管理"); err != nil {
-// 交给你项目的异常中间件渲染。本仓 RuoYi-Go-Vue-Plus 用 _ = c.Error(err) + Recover。
+// 交给你项目的异常中间件渲染。本仓 Go-Vue-Plus 用 _ = c.Error(err) + Recover。
 _ = c.Error(err)
 return
 }
@@ -64,7 +64,7 @@ rows, err := clientservice.QueryList(ctx, q, excelhelper.MaxRows+1)
 
 ## 错误如何回前端
 
-`excel` 包不掺合响应层语义，`TooManyRowsError` 是普通 error。若想把超限错误以友好文案回前端，由调用方包成业务异常。RuoYi-Go-Vue-Plus
+`excel` 包不掺合响应层语义，`TooManyRowsError` 是普通 error。若想把超限错误以友好文案回前端，由调用方包成业务异常。Go-Vue-Plus
 的做法（供参考）：
 
 ```go

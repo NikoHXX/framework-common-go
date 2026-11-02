@@ -8,8 +8,8 @@ import (
 // defaultCORSMaxAgeSeconds 预检结果缓存时长。
 const defaultCORSMaxAgeSeconds = 1800
 
-// traceIDHeader 链路 id 响应头名，与 ruoyi-core/middleware.TraceIDHeader 同值。
-// 就地复刻一份换本包自包含（不引 ruoyi-core/middleware）；trace 中间件另行迁移后会与此处重复，届时再合并。
+// traceIDHeader 链路 id 响应头名，与 framework-core/middleware.TraceIDHeader 同值。
+// 就地复刻一份换本包自包含（不引 framework-core/middleware）；trace 中间件另行迁移后会与此处重复，届时再合并。
 const traceIDHeader = "X-Request-Id"
 
 // CORSConfig 跨域配置。

@@ -1,6 +1,6 @@
 // Package cache 通用 Redis 缓存助手。
 //
-// 键格式：group + ":" + key，与 ruoyi-core/constant/cache_names.go 的组名和 TTL 常量配合使用。
+// 键格式：group + ":" + key，与 framework-core/constant/cache_names.go 的组名和 TTL 常量配合使用。
 // 所有结构体序列化走 jsonx，保持与 API 出参相同的 int64 精度契约。
 // Redis 操作均 fail-open：调用方收到 false/空错误时继续走 DB 或忽略即可。
 //

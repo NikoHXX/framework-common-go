@@ -10,14 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// codeFail 业务失败码，与 ruoyi-core/model/response.CodeFail 同值。
-// 就地定义避免引 ruoyi-core/model/response 包。
+// codeFail 业务失败码，与 framework-core/model/response.CodeFail 同值。
+// 就地定义避免引 framework-core/model/response 包。
 const codeFail = 500
 
 // msgOversized 请求体超限的提示文案。
 const msgOversized = "请求体超出大小限制"
 
-// failBody 失败响应体，形态同 ruoyi-core/model/response.R（Data 恒为 null）。
+// failBody 失败响应体，形态同 framework-core/model/response.R（Data 恒为 null）。
 // 用结构体而非 fmt 拼串：msg 含引号时拼串会产出非法 JSON。
 type failBody struct {
 	Code int    `json:"code"`
@@ -91,7 +91,7 @@ func shouldBufferBody(c *gin.Context, types []string) bool {
 // HTTP 恒 200 + {code,msg,data}：Java 的 RepeatableFilter 不设大小上限、没有对应的
 // 413 分支，这里的限制是 Go 侧自加的防护，故响应形态必须落回项目统一契约——
 // 真 413 会让前端 axios 走 error 分支，拿不到 msg。
-// 不引 ruoyi-core/model/response，与本包自包含的约定一致。
+// 不引 framework-core/model/response，与本包自包含的约定一致。
 func rejectOversizedBody(c *gin.Context, size, maxSize int64) {
 	log.Printf("[body]%s 请求地址'%s',请求体超限: %d > %d 字节",
 		logTracePrefix(c), c.Request.URL.Path, size, maxSize)
@@ -101,7 +101,7 @@ func rejectOversizedBody(c *gin.Context, size, maxSize int64) {
 	})
 }
 
-// traceIDKey 与 ruoyi-core/middleware.TraceIDKey 同值，这里直接用字面量避免反向依赖 middleware 包。
+// traceIDKey 与 framework-core/middleware.TraceIDKey 同值，这里直接用字面量避免反向依赖 middleware 包。
 const traceIDKey = "traceId"
 
 // logTracePrefix 返回日志用的 " [traceId]" 片段，无 id 时返回空串。

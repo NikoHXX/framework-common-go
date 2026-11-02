@@ -3,7 +3,7 @@
 跨域中间件。按 origin 通配白名单放行来源，预检 (OPTIONS)回显允许的方法/头/缓存 时长，不合规的跨域请求直接 403。必须注册在
 Auth 之前。
 
-对应原 `ruoyi-core/middleware/cors.go`，抽出为独立包。
+对应原 `framework-core/middleware/cors.go`，抽出为独立包。
 
 ## 用法
 

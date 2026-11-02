@@ -5,7 +5,7 @@
 // 必须注册在 RepeatableBody 之后、所有读参数的中间件与 handler 之前。
 //
 // 取舍：
-//   - 自包含、不引 ruoyi-core/middleware：traceId 取值与 logTracePrefix 就地复刻一份，
+//   - 自包含、不引 framework-core/middleware：traceId 取值与 logTracePrefix 就地复刻一份，
 //     Ant 路径匹配（ExcludeURLs 用）自带 path.go，本包零外部 middleware 依赖。
 //   - GET/DELETE 默认跳过：查询串与表单多半是无害读参，清洗收益低且易误伤。
 package xss

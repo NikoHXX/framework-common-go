@@ -12,9 +12,9 @@ import (
 	"github.com/HandsomeNPC/sa-token-go/stputil"
 	"github.com/gin-gonic/gin"
 
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/constant"
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/enum"
-	authmodel "github.com/NikoHXX/framework-common-go/ruoyi-core/model"
+	"github.com/NikoHXX/framework-common-go/framework-core/constant"
+	"github.com/NikoHXX/framework-common-go/framework-core/enum"
+	authmodel "github.com/NikoHXX/framework-common-go/framework-core/model"
 )
 
 // LoginUserKey token session 中 *LoginUser 的键。
@@ -41,7 +41,7 @@ func Login(loginUser *authmodel.LoginUser, device string) (string, error) {
 
 // LoginWithOptions 按客户端超时签发令牌，其余同 Login。
 //
-// RuoYi 的超时是按 sys_client 配的，各客户端(pc / app / 小程序)可不同，
+// JAVA 的超时是按 sys_client 配的，各客户端(pc / app / 小程序)可不同，
 // 故须随每次登录传入而非只读全局配置。
 func LoginWithOptions(loginUser *authmodel.LoginUser, opts LoginOptions) (string, error) {
 	loginID, err := loginUser.LoginID()
@@ -110,7 +110,7 @@ func toSaTokenPerms(perms []string) []string {
 }
 
 // loginUserCacheKey gin.Context 中本请求登录用户快照的键。
-const loginUserCacheKey = "ruoyi:loginUser"
+const loginUserCacheKey = "framework:loginUser"
 
 // GetLoginUser 取当前请求的登录用户，未登录返回 nil。
 func GetLoginUser(c *gin.Context) *authmodel.LoginUser {

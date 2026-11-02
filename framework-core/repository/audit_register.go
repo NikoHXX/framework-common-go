@@ -8,5 +8,5 @@ import (
 // 依赖方向是 repository → database，链接了本包的进程自动对每个数据源生效，
 // 各 main 无需显式调用，也无从漏掉。
 func init() {
-	database.RegisterOpenHook("ruoyi:audit", RegisterAuditCallbacks)
+	database.RegisterOpenHook("framework:audit", RegisterAuditCallbacks)
 }

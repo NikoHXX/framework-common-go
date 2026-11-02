@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/errs"
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/model/response"
+	"github.com/NikoHXX/framework-common-go/framework-core/errs"
+	"github.com/NikoHXX/framework-common-go/framework-core/model/response"
 )
 
 // ErrInvalidOrderBy 排序参数非法，用 ServiceError 以便中间件渲染成 400。

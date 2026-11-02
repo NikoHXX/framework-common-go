@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/constant"
+	"github.com/NikoHXX/framework-common-go/framework-core/constant"
 
 	"github.com/NikoHXX/framework-common-go/jsonx"
 )

@@ -14,7 +14,7 @@ import (
 // 换取中间件包的完全自包含。
 
 // excludeProperties 敏感字段集。与 operlog 那份是故意的两份副本（换取本包自包含），
-// 改这里时必须同步 ruoyi-core/middleware/operlog/param.go——两边曾因此分叉过：
+// 改这里时必须同步 framework-core/middleware/operlog/param.go——两边曾因此分叉过：
 // 一侧逐字匹配、一侧忽略大小写，导致 {"Password":...} 明文进了访问日志。
 // 行为约束见 param_test.go。
 var excludeProperties = []string{"password", "oldPassword", "newPassword", "confirmPassword"}

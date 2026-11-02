@@ -50,11 +50,11 @@ func AuditUserFrom(ctx context.Context) (AuditUser, bool) {
 // SQL 之前，这是唯一既能看到调用方预设值、又来得及改写的位置。
 func RegisterAuditCallbacks(db *gorm.DB) error {
 	if err := db.Callback().Create().Before("gorm:create").
-		Register("ruoyi:audit_insert_fill", auditInsertFill); err != nil {
+		Register("framework:audit_insert_fill", auditInsertFill); err != nil {
 		return err
 	}
 	return db.Callback().Update().Before("gorm:update").
-		Register("ruoyi:audit_update_fill", auditUpdateFill)
+		Register("framework:audit_update_fill", auditUpdateFill)
 }
 
 // resolveAuditUser 解析操作者，缺失的字段回落 -1。

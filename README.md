@@ -14,7 +14,7 @@
 | treeutil            | 树形结构构建（单根/多根挂接 + 就地拼装，雪花 ID 安全的 JSON 序列化）                                  |
 | useragent           | User-Agent 解析（浏览器名 + 操作系统名）                                                              |
 | sms                 | 短信发送（Sender 接口 + 内置阿里云实现，走官方 dysmsapi-20170525 SDK；换/加厂商再写一个 Sender 即可） |
-| ruoyi-core/constant | 业务常量（基础常量、全局 Redis key 前缀、缓存组名/TTL、推送类型、常用正则与密码校验、系统常量）       |
+| framework-core/constant | 业务常量（基础常量、全局 Redis key 前缀、缓存组名/TTL、推送类型、常用正则与密码校验、系统常量）       |
 
 
 ## 安装
@@ -25,4 +25,4 @@ go get github.com/NikoHXX/framework-common-go
 
 ## License
 
-与主仓 RuoYi-Go-Vue-Plus 保持一致。
+与主仓 Go-Vue-Plus 保持一致。

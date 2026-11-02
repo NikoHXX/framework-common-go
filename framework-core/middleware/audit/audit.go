@@ -4,8 +4,8 @@ package audit
 import (
 	"github.com/gin-gonic/gin"
 
-	pkgrepo "github.com/NikoHXX/framework-common-go/ruoyi-core/repository"
-	lh "github.com/NikoHXX/framework-common-go/ruoyi-core/utils/loginhelper"
+	pkgrepo "github.com/NikoHXX/framework-common-go/framework-core/repository"
+	lh "github.com/NikoHXX/framework-common-go/framework-core/utils/loginhelper"
 )
 
 // AuditContext 把登录用户的 userId/deptId 写进 request context，供 pkg/repository

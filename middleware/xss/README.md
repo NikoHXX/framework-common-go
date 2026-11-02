@@ -4,7 +4,7 @@
 取自 `RepeatableBody` 缓存的
 `gin.BodyBytesKey`。
 
-对应原 `ruoyi-core/middleware/xss.go`，抽出为独立包。
+对应原 `framework-core/middleware/xss.go`，抽出为独立包。
 
 ## 用法
 
@@ -45,6 +45,6 @@ r.Use(
 - **快速跳过**：查询串/JSON body 里没有裸 `<`（查询串再加 `%`）时直接跳过，不做解析。
 - **GET/DELETE 默认跳过**：查询串与表单多半是无害读参，清洗收益低且易误伤。
 - **排除路径取 `URL.Path`**：不用 `Request.RequestURI`，否则带查询串时匹配不上排除规则。
-- **Ant 路径匹配自带一份**（`path.go`）：与 `ExcludeURLs` 配套，本包不依赖 `ruoyi-core/middleware`，traceId 取值与日志前缀就地复刻。
+- **Ant 路径匹配自带一份**（`path.go`）：与 `ExcludeURLs` 配套，本包不依赖 `framework-core/middleware`，traceId 取值与日志前缀就地复刻。
 - **清洗后回写三处同步**：`Request.Body`、`gin.BodyBytesKey`、`ContentLength`，且去掉 `json.Encoder` 补的换行符让长度与 body
   严格对上。

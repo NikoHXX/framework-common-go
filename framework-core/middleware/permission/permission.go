@@ -7,9 +7,9 @@ import (
 	sagin "github.com/HandsomeNPC/sa-token-go/integrations/gin"
 	"github.com/gin-gonic/gin"
 
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/errs"
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/middleware/checklogin"
-	"github.com/NikoHXX/framework-common-go/ruoyi-core/model/response"
+	"github.com/NikoHXX/framework-common-go/framework-core/errs"
+	"github.com/NikoHXX/framework-common-go/framework-core/middleware/checklogin"
+	"github.com/NikoHXX/framework-common-go/framework-core/model/response"
 )
 
 // 鉴权失败的提示文案。未登录文案由 checklogin 统一给出。

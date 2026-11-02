@@ -1,6 +1,6 @@
 # ratelimiter
 
-接口限流（滑动窗口），计数存 Redis。对应 Java RuoYi 的 `@RateLimiter` 注解。
+接口限流（滑动窗口），计数存 Redis。对应 Java 的 `@RateLimiter` 注解。
 
 ## 初始化
 

@@ -12,7 +12,7 @@ import (
 type OpenHook func(db *gorm.DB) error
 
 // 本包只做数据库初始化，不认识任何业务语义；需要往每个实例挂回调的上层包
-// （如 ruoyi-core/repository 的审计字段填充）在 init() 里登记到这里，依赖方向
+// （如 framework-core/repository 的审计字段填充）在 init() 里登记到这里，依赖方向
 // 保持业务→基础设施的单向。
 var (
 	hookMu sync.RWMutex

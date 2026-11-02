@@ -1,6 +1,6 @@
 package constant
 
-// 留在此处的符号都被 ruoyi-core 自己的包用到，故不能下移到业务模块：
+// 留在此处的符号都被 framework-core 自己的包用到，故不能下移到业务模块：
 // SuperAdminUserID / AllPermission 由 utils/loginhelper 用，
 // ExcludeProperties 由 middleware/operlog 用。
 // 其余 system 专属常量已迁至 internal/system/constant。

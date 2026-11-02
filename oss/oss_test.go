@@ -77,30 +77,30 @@ func TestBucketURL(t *testing.T) {
 	}{
 		{
 			name: "路径风格",
-			p:    Properties{Endpoint: "127.0.0.1:9000", BucketName: "ruoyi"},
-			want: "http://127.0.0.1:9000/ruoyi",
+			p:    Properties{Endpoint: "127.0.0.1:9000", BucketName: "test"},
+			want: "http://127.0.0.1:9000/test",
 		},
 		{
 			name: "路径风格 + https",
-			p:    Properties{Endpoint: "minio.internal", BucketName: "ruoyi", IsHttps: "Y"},
-			want: "https://minio.internal/ruoyi",
+			p:    Properties{Endpoint: "minio.internal", BucketName: "test", IsHttps: "Y"},
+			want: "https://minio.internal/test",
 		},
 		{
 			name: "虚拟主机风格",
-			p:    Properties{Endpoint: "oss-cn-beijing.aliyuncs.com", BucketName: "ruoyi", IsHttps: "Y"},
-			want: "https://ruoyi.oss-cn-beijing.aliyuncs.com",
+			p:    Properties{Endpoint: "oss-cn-beijing.aliyuncs.com", BucketName: "test", IsHttps: "Y"},
+			want: "https://test.oss-cn-beijing.aliyuncs.com",
 		},
 		{
 			name: "domainUrl 覆盖 endpoint",
-			p:    Properties{Endpoint: "127.0.0.1:9000", DomainURL: "cdn.example.com", BucketName: "ruoyi"},
-			want: "http://cdn.example.com/ruoyi",
+			p:    Properties{Endpoint: "127.0.0.1:9000", DomainURL: "cdn.example.com", BucketName: "test"},
+			want: "http://cdn.example.com/test",
 		},
 		{
 			// 库里 seed 的 endpoint 是裸 host:port，但用户可能带上协议头；
 			// 不剥就会拼出 http://http://... 这种废地址。
 			name: "endpoint 自带协议头时剥掉再按 isHttps 重加",
-			p:    Properties{Endpoint: "https://127.0.0.1:9000", BucketName: "ruoyi"},
-			want: "http://127.0.0.1:9000/ruoyi",
+			p:    Properties{Endpoint: "https://127.0.0.1:9000", BucketName: "test"},
+			want: "http://127.0.0.1:9000/test",
 		},
 	}
 	for _, c := range cases {

@@ -188,7 +188,7 @@ func cleanJSONNode(node any) (any, bool) {
 	}
 }
 
-// traceIDKey 与 ruoyi-core/middleware.TraceIDKey 同值，这里直接用字面量避免反向依赖 middleware 包。
+// traceIDKey 与 framework-core/middleware.TraceIDKey 同值，这里直接用字面量避免反向依赖 middleware 包。
 const traceIDKey = "traceId"
 
 // logTracePrefix 返回日志用的 " [traceId]" 片段，无 id 时返回空串。
