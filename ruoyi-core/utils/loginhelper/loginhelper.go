@@ -12,9 +12,9 @@ import (
 	"github.com/HandsomeNPC/sa-token-go/stputil"
 	"github.com/gin-gonic/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/constant"
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/enum"
-	authmodel "github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/model"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/constant"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/enum"
+	authmodel "github.com/NikoHXX/framework-common-go/ruoyi-core/model"
 )
 
 // LoginUserKey token session 中 *LoginUser 的键。

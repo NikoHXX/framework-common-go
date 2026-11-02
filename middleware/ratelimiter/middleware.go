@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ip"
+	"github.com/NikoHXX/framework-common-go/ip"
 )
 
 // handler 生成限流中间件。默认实例在构造时取一次：Init 必须先于路由注册，

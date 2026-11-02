@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"slices"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/jsonx"
+	"github.com/NikoHXX/framework-common-go/jsonx"
 )
 
 // Tree 树节点。固定字段由结构体承载，Extra 承动态扩展键，序列化时拍平成单层对象。

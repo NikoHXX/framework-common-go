@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/cache"
+	"github.com/NikoHXX/framework-common-go/cache"
 	goredis "github.com/redis/go-redis/v9"
 )
 

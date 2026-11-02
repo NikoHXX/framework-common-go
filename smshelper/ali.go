@@ -3,7 +3,7 @@ package smshelper
 import (
 	"fmt"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/jsonx"
+	"github.com/NikoHXX/framework-common-go/jsonx"
 	openapiutil "github.com/alibabacloud-go/darabonba-openapi/v2/utils"
 	dysmsapi "github.com/alibabacloud-go/dysmsapi-20170525/v5/client"
 )

@@ -11,9 +11,9 @@ Auth 之前。
 
 ```go
 import (
-"github.com/HandsomeNPC/ruoyi-common-go/middleware"
-"github.com/HandsomeNPC/ruoyi-common-go/middleware/cors"
-"github.com/HandsomeNPC/ruoyi-common-go/middleware/trace"
+"github.com/NikoHXX/framework-common-go/middleware"
+"github.com/NikoHXX/framework-common-go/middleware/cors"
+"github.com/NikoHXX/framework-common-go/middleware/trace"
 )
 
 r.Use(

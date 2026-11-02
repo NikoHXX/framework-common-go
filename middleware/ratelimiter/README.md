@@ -8,8 +8,8 @@
 
 ```go
 import (
-    "github.com/HandsomeNPC/ruoyi-common-go/redis"
-    "github.com/HandsomeNPC/ruoyi-common-go/middleware/ratelimiter"
+    "github.com/NikoHXX/framework-common-go/redis"
+    "github.com/NikoHXX/framework-common-go/middleware/ratelimiter"
 )
 
 redis.Init(cfg.Redis)

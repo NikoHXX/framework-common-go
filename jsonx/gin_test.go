@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/jsonx"
+	"github.com/NikoHXX/framework-common-go/jsonx"
 )
 
 // 经 gin 的真实 c.JSON / ShouldBindJSON 验证收口；jsonx_test.go 只测 codec 本身。

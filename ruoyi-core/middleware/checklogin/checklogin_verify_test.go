@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/middleware/recover"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/middleware/recover"
 )
 
 // 未登录(无 token)时必须是 HTTP 200 + {"code":401,...}，与 Java R.fail(401,...) 对齐。

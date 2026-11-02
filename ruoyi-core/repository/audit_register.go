@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/HandsomeNPC/ruoyi-common-go/database"
+	"github.com/NikoHXX/framework-common-go/database"
 )
 
 // 审计回调的注册在本包这侧完成：database 只负责建连，不认识审计语义。

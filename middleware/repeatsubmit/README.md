@@ -10,8 +10,8 @@
 
 ```go
 import (
-    "github.com/HandsomeNPC/ruoyi-common-go/redis"
-    "github.com/HandsomeNPC/ruoyi-common-go/middleware/repeatsubmit"
+    "github.com/NikoHXX/framework-common-go/redis"
+    "github.com/NikoHXX/framework-common-go/middleware/repeatsubmit"
 )
 
 redis.Init(cfg.Redis)

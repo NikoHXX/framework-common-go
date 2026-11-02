@@ -24,7 +24,7 @@ Inner  []string // 无 tag，不导出
 ## 导出
 
 ```go
-import "github.com/HandsomeNPC/ruoyi-common-go/excelhelper"
+import "github.com/NikoHXX/framework-common-go/excelhelper"
 
 // Export 把 rows 写成 xlsx 附件直接写进 gin 响应，sheetName 同时作下载文件名主体。
 if err := excelhelper.Export(c, rows, "客户端管理"); err != nil {

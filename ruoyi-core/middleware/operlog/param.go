@@ -9,9 +9,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/constant"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/constant"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/jsonx"
+	"github.com/NikoHXX/framework-common-go/jsonx"
 )
 
 // 请求参数脱敏与截断。本包自带一份，与 accesslog 各自维护——换取本包完全自包含，

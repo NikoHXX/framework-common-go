@@ -20,7 +20,7 @@
 ## 安装
 
 ```bash
-go get github.com/HandsomeNPC/ruoyi-common-go
+go get github.com/NikoHXX/framework-common-go
 ```
 
 ## License

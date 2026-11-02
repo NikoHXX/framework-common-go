@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/model/response"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/model/response"
 )
 
 // 提示文案，对齐 Java GlobalExceptionHandler 的两个对应分支。

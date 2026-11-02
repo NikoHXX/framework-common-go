@@ -7,7 +7,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/model/page"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/model/page"
 )
 
 // ErrPageMissingModel 调用方未指定查询目标表。

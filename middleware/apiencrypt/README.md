@@ -11,7 +11,7 @@ AES 密钥加密响应体。`!Enabled` 时中间件直通。
 
 ```go
 import (
-	"github.com/HandsomeNPC/ruoyi-common-go/middleware/apiencrypt"
+	"github.com/NikoHXX/framework-common-go/middleware/apiencrypt"
 )
 
 cfg := config.Get() // 本模块配置子集

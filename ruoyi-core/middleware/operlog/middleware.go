@@ -11,14 +11,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/constant"
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/errs"
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/model/response"
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/utils/loginhelper"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/constant"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/errs"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/model/response"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/utils/loginhelper"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/jsonx"
+	"github.com/NikoHXX/framework-common-go/jsonx"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ip"
+	"github.com/NikoHXX/framework-common-go/ip"
 )
 
 // run 执行一次操作日志记录。

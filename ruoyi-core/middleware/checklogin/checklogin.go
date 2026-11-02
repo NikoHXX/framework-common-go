@@ -10,8 +10,8 @@ import (
 	satokencore "github.com/HandsomeNPC/sa-token-go/core"
 	sagin "github.com/HandsomeNPC/sa-token-go/integrations/gin"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/errs"
-	"github.com/HandsomeNPC/ruoyi-common-go/ruoyi-core/model/response"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/errs"
+	"github.com/NikoHXX/framework-common-go/ruoyi-core/model/response"
 )
 
 // 登录态失效的提示文案，与 Java SaTokenExceptionHandler 按 NotLoginException.getType()

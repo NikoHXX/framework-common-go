@@ -15,7 +15,7 @@ import (
 	goredis "github.com/redis/go-redis/v9"
 	"golang.org/x/sync/singleflight"
 
-	"github.com/HandsomeNPC/ruoyi-common-go/jsonx"
+	"github.com/NikoHXX/framework-common-go/jsonx"
 )
 
 var sf singleflight.Group

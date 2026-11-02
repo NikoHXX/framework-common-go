@@ -12,11 +12,11 @@
 
 ```go
 import (
-"github.com/HandsomeNPC/ruoyi-common-go/middleware"
-"github.com/HandsomeNPC/ruoyi-common-go/middleware/cors"
-"github.com/HandsomeNPC/ruoyi-common-go/middleware/repeatablebody"
-"github.com/HandsomeNPC/ruoyi-common-go/middleware/trace"
-"github.com/HandsomeNPC/ruoyi-common-go/middleware/xss"
+"github.com/NikoHXX/framework-common-go/middleware"
+"github.com/NikoHXX/framework-common-go/middleware/cors"
+"github.com/NikoHXX/framework-common-go/middleware/repeatablebody"
+"github.com/NikoHXX/framework-common-go/middleware/trace"
+"github.com/NikoHXX/framework-common-go/middleware/xss"
 )
 
 r.Use(

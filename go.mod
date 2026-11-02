@@ -1,4 +1,4 @@
-module github.com/HandsomeNPC/ruoyi-common-go
+module github.com/NikoHXX/framework-common-go
 
 go 1.26.5
 
