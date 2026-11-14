@@ -7,8 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	satokencore "github.com/HandsomeNPC/sa-token-go/core"
-	sagin "github.com/HandsomeNPC/sa-token-go/integrations/gin"
+	satokencore "github.com/NikoHXX/sa-token-go/core"
+	sagin "github.com/NikoHXX/sa-token-go/integrations/gin"
 
 	"github.com/NikoHXX/framework-common-go/framework-core/errs"
 	"github.com/NikoHXX/framework-common-go/framework-core/model/response"

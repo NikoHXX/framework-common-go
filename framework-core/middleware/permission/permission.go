@@ -4,7 +4,7 @@ package permission
 import (
 	"log"
 
-	sagin "github.com/HandsomeNPC/sa-token-go/integrations/gin"
+	sagin "github.com/NikoHXX/sa-token-go/integrations/gin"
 	"github.com/gin-gonic/gin"
 
 	"github.com/NikoHXX/framework-common-go/framework-core/errs"

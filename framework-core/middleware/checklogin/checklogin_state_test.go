@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	sagin "github.com/HandsomeNPC/sa-token-go/integrations/gin"
-	saredis "github.com/HandsomeNPC/sa-token-go/storage/redis"
+	sagin "github.com/NikoHXX/sa-token-go/integrations/gin"
+	saredis "github.com/NikoHXX/sa-token-go/storage/redis"
 	"github.com/redis/go-redis/v9"
 )
 

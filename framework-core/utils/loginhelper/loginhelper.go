@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	sasession "github.com/HandsomeNPC/sa-token-go/core/session"
-	sagin "github.com/HandsomeNPC/sa-token-go/integrations/gin"
-	"github.com/HandsomeNPC/sa-token-go/stputil"
+	sasession "github.com/NikoHXX/sa-token-go/core/session"
+	sagin "github.com/NikoHXX/sa-token-go/integrations/gin"
+	"github.com/NikoHXX/sa-token-go/stputil"
 	"github.com/gin-gonic/gin"
 
 	"github.com/NikoHXX/framework-common-go/framework-core/constant"

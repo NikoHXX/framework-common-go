@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/HandsomeNPC/sa-token-go/core/listener"
-	sagin "github.com/HandsomeNPC/sa-token-go/integrations/gin"
-	saredis "github.com/HandsomeNPC/sa-token-go/storage/redis"
+	"github.com/NikoHXX/sa-token-go/core/listener"
+	sagin "github.com/NikoHXX/sa-token-go/integrations/gin"
+	saredis "github.com/NikoHXX/sa-token-go/storage/redis"
 	"github.com/redis/go-redis/v9"
 )
 
