@@ -91,9 +91,14 @@ func TestBucketURL(t *testing.T) {
 			want: "https://test.oss-cn-beijing.aliyuncs.com",
 		},
 		{
-			name: "domainUrl 覆盖 endpoint",
+			name: "路径风格的自定义域名仍保留桶名",
 			p:    Properties{Endpoint: "127.0.0.1:9000", DomainURL: "cdn.example.com", BucketName: "test"},
 			want: "http://cdn.example.com/test",
+		},
+		{
+			name: "七牛自定义域名不再拼接桶名",
+			p:    Properties{Endpoint: "s3-cn-south-1.qiniucs.com", DomainURL: "cdn.ahxlo.com", BucketName: "apexreport-cdn", IsHttps: "Y"},
+			want: "https://cdn.ahxlo.com",
 		},
 		{
 			// 库里 seed 的 endpoint 是裸 host:port，但用户可能带上协议头；
@@ -233,5 +238,23 @@ func TestNewClientPresignOffline(t *testing.T) {
 	if !strings.HasPrefix(url, "https://ai-chat.oss-cn-beijing.aliyuncs.com/2026/10/26/x.png?") ||
 		!strings.Contains(url, "X-Amz-Expires=300") {
 		t.Errorf("预签名地址不符: %s", url)
+	}
+
+	qiniu, err := NewClient("qiniu", Properties{
+		Endpoint: "s3-cn-south-1.qiniucs.com", DomainURL: "cdn.ahxlo.com",
+		BucketName: "apexreport-cdn", AccessKey: "ak", SecretKey: "sk",
+		IsHttps: "Y", AccessPolicy: AccessPolicyPrivate,
+	})
+	if err != nil {
+		t.Fatalf("NewClient qiniu: %v", err)
+	}
+	signed, err := qiniu.PresignGetURL(t.Context(), "2026/11/15/a.jpg", 2*time.Minute)
+	if err != nil {
+		t.Fatalf("PresignGetURL qiniu: %v", err)
+	}
+	if !strings.HasPrefix(signed, "https://cdn.ahxlo.com/2026/11/15/a.jpg?") ||
+		strings.Contains(signed, "apexreport-cdn") ||
+		!strings.Contains(signed, "X-Amz-Expires=120") {
+		t.Errorf("七牛自定义域名预签名不符: %s", signed)
 	}
 }

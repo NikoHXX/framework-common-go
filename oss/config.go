@@ -109,6 +109,11 @@ func (c ClientConfig) EndpointURL() string {
 	return rebuildURLHeader(c.UseHTTPS, c.Endpoint)
 }
 
+// bucketBoundDomain 云厂商自定义域名已绑定默认桶，访问地址和预签名都不能再拼桶名。
+func (c ClientConfig) bucketBoundDomain() bool {
+	return !c.UsePathStyle && c.Domain != ""
+}
+
 // DomainURL 带协议头的自定义域名，未配置时回落服务地址。
 // 预签名走这里而非 EndpointURL，使签出的链接指向 CDN。
 func (c ClientConfig) DomainURL() string {
@@ -119,7 +124,13 @@ func (c ClientConfig) DomainURL() string {
 }
 
 // BucketURL 桶的访问前缀，落库的文件 URL 即 BucketURL + "/" + key。
+//
+// 云厂商的自定义域名已经绑定默认桶，域名本身就是访问入口，不能再把桶名接到前面。
+// 自建存储走路径风格，配了域名也仍要保留 /bucket。
 func (c ClientConfig) BucketURL() string {
+	if c.bucketBoundDomain() {
+		return c.DomainURL()
+	}
 	base := c.Domain
 	if base == "" {
 		base = c.Endpoint

@@ -5,11 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
+	"net/url"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
@@ -205,6 +209,9 @@ func (c *Client) Delete(ctx context.Context, key string) error {
 
 // PresignGetURL 生成限时的预签名下载链接，供私有桶对外暴露文件。
 func (c *Client) PresignGetURL(ctx context.Context, key string, ttl time.Duration) (string, error) {
+	if c.cfg.bucketBoundDomain() {
+		return c.presignBoundDomain(ctx, http.MethodGet, key, ttl)
+	}
 	req, err := c.presign.PresignGetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(c.cfg.Bucket),
 		Key:    aws.String(key),
@@ -213,4 +220,50 @@ func (c *Client) PresignGetURL(ctx context.Context, key string, ttl time.Duratio
 		return "", fmt.Errorf("oss: 生成 %s 的预签名地址失败: %w", key, err)
 	}
 	return req.URL, nil
+}
+
+// presignBoundDomain 在已绑定桶的自定义域名上签名，路径只有对象键。
+// S3 SDK 的虚拟主机寻址会把桶名接到域名前，CDN 域名认不出这个主机名。
+func (c *Client) presignBoundDomain(ctx context.Context, method, key string, ttl time.Duration) (string, error) {
+	endpoint, err := url.Parse(c.cfg.DomainURL())
+	if err != nil {
+		return "", fmt.Errorf("oss: 自定义域名无效: %w", err)
+	}
+	endpoint.Path = boundDomainPath(endpoint.Path, key)
+	endpoint.RawPath = ""
+	query := endpoint.Query()
+	seconds := int64(ttl / time.Second)
+	if seconds < 1 {
+		seconds = 1
+	}
+	query.Set("X-Amz-Expires", strconv.FormatInt(seconds, 10))
+	endpoint.RawQuery = query.Encode()
+
+	httpReq, err := http.NewRequestWithContext(ctx, method, endpoint.String(), nil)
+	if err != nil {
+		return "", fmt.Errorf("oss: 生成 %s 的预签名地址失败: %w", key, err)
+	}
+	creds, err := c.s3.Options().Credentials.Retrieve(ctx)
+	if err != nil {
+		return "", fmt.Errorf("oss: 生成 %s 的预签名地址失败: %w", key, err)
+	}
+	signer := v4.NewSigner()
+	signed, _, err := signer.PresignHTTP(ctx, creds, httpReq, "UNSIGNED-PAYLOAD", "s3", c.cfg.Region, time.Now().UTC())
+	if err != nil {
+		return "", fmt.Errorf("oss: 生成 %s 的预签名地址失败: %w", key, err)
+	}
+	return signed, nil
+}
+
+// boundDomainPath 把对象键接到自定义域名已有路径后，斜杠保留。
+func boundDomainPath(basePath, key string) string {
+	key = strings.TrimPrefix(strings.TrimSpace(key), "/")
+	base := strings.TrimSpace(basePath)
+	if base == "" || base == "/" {
+		return "/" + key
+	}
+	if !strings.HasPrefix(base, "/") {
+		base = "/" + base
+	}
+	return strings.TrimRight(base, "/") + "/" + key
 }
