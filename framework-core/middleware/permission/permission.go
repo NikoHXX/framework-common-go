@@ -7,6 +7,7 @@ import (
 	sagin "github.com/NikoHXX/sa-token-go/integrations/gin"
 	"github.com/gin-gonic/gin"
 
+	"github.com/NikoHXX/framework-common-go/framework-core/datascope"
 	"github.com/NikoHXX/framework-common-go/framework-core/errs"
 	"github.com/NikoHXX/framework-common-go/framework-core/middleware/checklogin"
 	"github.com/NikoHXX/framework-common-go/framework-core/model/response"
@@ -24,16 +25,17 @@ const msgNotPermission = "没有访问权限，请联系管理员授权"
 // 语义为 OR（同 sagin.CheckPermission）。Java @SaCheckPermission 默认 AND，
 // 但上游所有 Controller 都只传单个权限码，差异不可观测。
 func CheckPermission(perms ...string) gin.HandlerFunc {
-	return check(perms, sagin.CheckPermissionOrByToken, "权限码校验失败")
+	return check(perms, sagin.CheckPermissionOrByToken, "权限码校验失败", true)
 }
 
 // CheckRole 角色校验中间件，多个角色任一命中即放行。
 func CheckRole(roles ...string) gin.HandlerFunc {
-	return check(roles, sagin.CheckRoleOrByToken, "角色权限校验失败")
+	return check(roles, sagin.CheckRoleOrByToken, "角色权限校验失败", false)
 }
 
 // check 组装校验中间件。verify 失败即视为无权限，其内部区分不了的未登录场景由登录态预检兜住。
-func check(want []string, verify func(string, []string) error, reason string) gin.HandlerFunc {
+// recordPerm 为真时把权限码写入 request context，供数据权限按当前接口挑角色。
+func check(want []string, verify func(string, []string) error, reason string, recordPerm bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 权限校验前先判登录态：Java 的 @SaCheckPermission 内部先过登录校验，
 		// 未登录抛 NotLoginException(401) 而非 NotPermissionException(403)。
@@ -48,6 +50,9 @@ func check(want []string, verify func(string, []string) error, reason string) gi
 			_ = c.Error(errs.New(response.CodeForbidden, msgNotPermission, err.Error()))
 			c.Abort()
 			return
+		}
+		if recordPerm {
+			c.Request = c.Request.WithContext(datascope.WithPerms(c.Request.Context(), want))
 		}
 		c.Next()
 	}
