@@ -14,8 +14,6 @@ type LoginUser struct {
 	UserID int64 `json:"userId"`
 	// DeptID 部门ID。
 	DeptID int64 `json:"deptId"`
-	// DeptCategory 部门类别编码。
-	DeptCategory string `json:"deptCategory"`
 	// DeptName 部门名。
 	DeptName string `json:"deptName"`
 	// Token 用户唯一标识。

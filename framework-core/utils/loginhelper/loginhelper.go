@@ -197,14 +197,6 @@ func GetDeptName(c *gin.Context) string {
 	return ""
 }
 
-// GetDeptCategory 取当前登录用户部门类别编码，未登录返回 ""。
-func GetDeptCategory(c *gin.Context) string {
-	if lu := GetLoginUser(c); lu != nil {
-		return lu.DeptCategory
-	}
-	return ""
-}
-
 // GetUserType 取当前登录用户类型，未登录返回 ""。
 func GetUserType(c *gin.Context) string {
 	if lu := GetLoginUser(c); lu != nil {
