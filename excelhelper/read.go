@@ -118,15 +118,8 @@ func setCell(rv reflect.Value, c column, raw string) error {
 	if raw == "" {
 		return nil
 	}
-	// 字典反向：单元格写标签则换回原值。
-	if len(c.dict) > 0 {
-		for _, p := range c.dict {
-			if p.label == raw {
-				raw = p.value
-				break
-			}
-		}
-	}
+	// 字典反向：单元格写标签则换回原值（优先运行时 dictType）。
+	raw = c.valueOf(raw)
 
 	switch f.Kind() {
 	case reflect.String:

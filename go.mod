@@ -105,3 +105,12 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
+
+// 本地 sa-token，LoginParameter.IsConcurrent 等改动以这份源码为准。
+replace github.com/NikoHXX/sa-token-go/core => ../sa-token-go/core
+
+replace github.com/NikoHXX/sa-token-go/integrations/gin => ../sa-token-go/integrations/gin
+
+replace github.com/NikoHXX/sa-token-go/stputil => ../sa-token-go/stputil
+
+replace github.com/NikoHXX/sa-token-go/storage/redis => ../sa-token-go/storage/redis

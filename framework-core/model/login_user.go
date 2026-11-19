@@ -4,6 +4,7 @@ package model
 import (
 	"errors"
 	"strconv"
+	"time"
 
 	"github.com/NikoHXX/framework-common-go/framework-core/domain"
 )
@@ -40,6 +41,16 @@ type LoginUser struct {
 	Username string `json:"username"`
 	// Nickname 用户昵称。
 	Nickname string `json:"nickname"`
+	// PhoneNumber 手机号码。
+	PhoneNumber string `json:"phoneNumber"`
+	// Email 用户邮箱。
+	Email string `json:"email"`
+	// Password 密码哈希（会话侧复用，对齐 Java LoginUser.password）。
+	Password string `json:"password"`
+	// PwdUpdateTime 密码最后更新时间（等保强制改密判定）。
+	PwdUpdateTime *time.Time `json:"pwdUpdateTime"`
+	// PwdResetFlag 需强制改密（0否 1是）。
+	PwdResetFlag string `json:"pwdResetFlag"`
 	// Roles 角色对象。
 	Roles []*domain.RoleDTO `json:"roles"`
 	// DataScopeRoleMap 数据权限角色映射，key 为权限码，value 为可参与数据权限计算的角色ID列表。
@@ -52,6 +63,8 @@ type LoginUser struct {
 	ClientKey string `json:"clientKey"`
 	// DeviceType 设备类型。
 	DeviceType string `json:"deviceType"`
+	// OpenID 小程序 openid（XcxLoginUser 字段，合入同一会话结构）。
+	OpenID string `json:"openid,omitempty"`
 }
 
 var (
@@ -61,7 +74,11 @@ var (
 	ErrUserIDEmpty = errors.New("用户ID不能为空")
 )
 
-// LoginID 获取会话使用的登录标识，形如 "sys_user:1761100000000000001"。
+// LoginIDSeparator 登录标识分隔符，对齐 Java LoginUser.LOGIN_ID_SEPARATOR。
+// Sa-Token 1.46 起默认禁止 loginId 含冒号，故用短横线。
+const LoginIDSeparator = "-"
+
+// LoginID 获取会话使用的登录标识，形如 "sys_user-1761100000000000001"。
 func (u *LoginUser) LoginID() (string, error) {
 	if u == nil {
 		return "", ErrUserTypeEmpty
@@ -72,5 +89,5 @@ func (u *LoginUser) LoginID() (string, error) {
 	if u.UserID == 0 {
 		return "", ErrUserIDEmpty
 	}
-	return u.UserType + ":" + strconv.FormatInt(u.UserID, 10), nil
+	return u.UserType + LoginIDSeparator + strconv.FormatInt(u.UserID, 10), nil
 }

@@ -12,6 +12,8 @@ const (
 	tagHeader = "excel"
 	// tagDict 值映射表达式，形如 "0=正常,1=停用"。
 	tagDict = "excelDict"
+	// tagDictType 运行时字典类型，对齐 Java @ExcelDictFormat(dictType=...)。
+	tagDictType = "excelDictType"
 )
 
 // column 一个导出列。
@@ -20,6 +22,8 @@ type column struct {
 	// index 走 FieldByIndex 的多级下标，匿名嵌入的字段会有多级。
 	index []int
 	dict  []dictPair
+	// dictType 非空时优先走 DictProvider；未命中再回落静态 dict。
+	dictType string
 }
 
 // dictPair 一条值映射。用切片而非 map：表达式里的顺序是人写的，
@@ -97,7 +101,8 @@ func parseColumns(t reflect.Type, prefix []int) ([]column, error) {
 		if err != nil {
 			return nil, fmt.Errorf("excelhelper: 字段 %s.%s 的 %q tag 无效: %w", t.Name(), f.Name, tagDict, err)
 		}
-		cols = append(cols, column{header: header, index: index, dict: dict})
+		dictType := strings.TrimSpace(f.Tag.Get(tagDictType))
+		cols = append(cols, column{header: header, index: index, dict: dict, dictType: dictType})
 	}
 	return cols, nil
 }
@@ -126,10 +131,17 @@ func parseDict(expr string) ([]dictPair, error) {
 }
 
 // label 把原始值换成字典标签。
+// 优先 excelDictType（运行时 sys_dict），再回落静态 excelDict。
 // 未命中时原样返回而非留空：
 // 导出是给人做审计的，留空会让"字典缺了一项"和"这行本来就没值"看起来一样。
 func (c column) label(raw string) string {
-	if raw == "" || len(c.dict) == 0 {
+	if raw == "" {
+		return raw
+	}
+	if lab, ok := lookupDict(c.dictType, raw); ok {
+		return lab
+	}
+	if len(c.dict) == 0 {
 		return raw
 	}
 	for _, p := range c.dict {
@@ -138,4 +150,20 @@ func (c column) label(raw string) string {
 		}
 	}
 	return raw
+}
+
+// valueOf 把单元格标签反向成原值（导入用）。
+func (c column) valueOf(cell string) string {
+	if cell == "" {
+		return cell
+	}
+	if v, ok := reverseDict(c.dictType, cell); ok {
+		return v
+	}
+	for _, p := range c.dict {
+		if p.label == cell {
+			return p.value
+		}
+	}
+	return cell
 }

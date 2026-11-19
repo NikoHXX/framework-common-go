@@ -1,46 +1,94 @@
-// Package smshelper 阿里云短信发送。
+// Package smshelper 保留 YAML 启动期 Init 的薄封装。
 //
-// 仅接阿里云一家：本项目发短信的唯一场景是登录验证码，sms4j 那套多渠道聚合
-// 的复杂度不值得照搬。签名 / 模板随业务变，由调用方各自透传，客户端只建一个。
-// 阿里云 SDK 相关代码集中在 ali.go，本文件只放与厂商无关的包级状态与入口。
+// 新代码请直接使用 github.com/NikoHXX/framework-common-go/sms。
+// 本包仅服务仍走 yaml 配置的旧调用方；ahxlo 主路径已改 DB + sms.NewSender。
 package smshelper
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"log"
+
+	"github.com/NikoHXX/framework-common-go/sms"
 )
 
-// ErrDisabled 短信功能未开启（顶层 enabled=false，或指定渠道客户端未就绪）。
-// 由调用方翻译成给前端看的文案。
+// ErrDisabled 短信功能未开启。
 var ErrDisabled = errors.New("smshelper: 短信功能未开启")
 
-// enabled 是否有至少一个渠道就绪可发。
-var enabled bool
+var (
+	enabled bool
+	aliCred sms.Credentials
+)
 
-// Init 按传入的 SMSConfig 初始化短信渠道，须在配置加载之后、开始接请求之前调用。
-//
-// 只在启动期调一次：写 enabled / aliClient 在 main goroutine 完成，后续 handler
-// goroutine 由 net/http 创建时即与主 goroutine 建立 happens-before，故读无需加锁。
-// 某家渠道失败只记日志跳过，不让一个坏渠道拖垮整组；全失败则 enabled=false，
-// 接口返回「未开启」而非 fatal。
+// Init 按 YAML SMSConfig 初始化（仅阿里云）。
 func Init(c SMSConfig) {
 	if !c.Enabled {
 		log.Printf("[smshelper] 未开启")
 		return
 	}
-
-	if err := initAliClient(c.Aliyun); err != nil {
+	cred := sms.Credentials{
+		AccessKeyID:     c.Aliyun.AccessKeyID,
+		AccessKeySecret: c.Aliyun.AccessKeySecret,
+		Signature:       c.Captcha.SignName, // 校验用；实际发信仍以 SendByAli 入参为准
+		URL:             c.Aliyun.Endpoint,
+		RegionID:        c.Aliyun.RegionID,
+	}
+	if _, err := sms.NewSender(sms.SupplierAlibaba, cred); err != nil {
 		log.Printf("[smshelper] 阿里云渠道未就绪: %v", err)
-	} else {
-		enabled = true
+		return
 	}
-
-	if enabled {
-		log.Printf("[smshelper] 已就绪")
-	} else {
-		log.Printf("[smshelper] 无可用渠道")
-	}
+	aliCred = cred
+	enabled = true
+	log.Printf("[smshelper] 已就绪")
 }
 
-// Enabled 短信功能是否可用（至少一个渠道就绪）。
+// Enabled 是否可用。
 func Enabled() bool { return enabled }
+
+// SendByAli 用阿里云渠道发一条短信，未就绪时返回 ErrDisabled。
+// templateParam 接受 map[string]string 或可忽略的其它类型（非 map 则空参数）。
+func SendByAli(phone, signName, templateCode string, templateParam any) error {
+	if !enabled {
+		return ErrDisabled
+	}
+	if signName == "" || templateCode == "" {
+		return fmt.Errorf("smshelper: signName / templateCode 未传入")
+	}
+	cred := aliCred
+	cred.Signature = signName
+	sender, err := sms.NewSender(sms.SupplierAlibaba, cred)
+	if err != nil {
+		return err
+	}
+	params := asStringMap(templateParam)
+	res, err := sender.Send(context.Background(), sms.SendRequest{
+		Phone:        phone,
+		TemplateCode: templateCode,
+		Params:       params,
+	})
+	if err != nil {
+		if res.Message != "" {
+			return fmt.Errorf("smshelper: 短信发送失败: %s", res.Message)
+		}
+		return fmt.Errorf("smshelper: %w", err)
+	}
+	return nil
+}
+
+func asStringMap(v any) map[string]string {
+	switch m := v.(type) {
+	case map[string]string:
+		return m
+	case map[string]any:
+		out := make(map[string]string, len(m))
+		for k, val := range m {
+			if s, ok := val.(string); ok {
+				out[k] = s
+			}
+		}
+		return out
+	default:
+		return nil
+	}
+}

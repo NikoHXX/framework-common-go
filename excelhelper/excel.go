@@ -1,11 +1,12 @@
 // Package excelhelper 提供结构体 tag 驱动的通用 xlsx 导出。
 //
 // 在 VO 字段上打 `excel:"表头"` 即导出该列，列序即字段声明序；
-// 需要值映射时再加 `excelDict:"0=正常,1=停用"`。没打 tag 的字段不导出。
+// 需要值映射时再加 `excelDict:"0=正常,1=停用"`；要对齐 Java 读库字典再加
+// `excelDictType:"sys_normal_disable"`（经 SetDictProvider 注入）。没打 tag 的字段不导出。
 //
 //	type SysClientVo struct {
 //	    ID     int64  `excel:"id"`
-//	    Status string `excel:"状态" excelDict:"0=正常,1=停用"`
+//	    Status string `excel:"状态" excelDict:"0=正常,1=停用" excelDictType:"sys_normal_disable"`
 //	    Inner  []string // 无 tag，不导出
 //	}
 //

@@ -55,14 +55,14 @@ func setupMgr(t *testing.T) {
 
 func TestVerifyKickOut(t *testing.T) {
 	setupMgr(t)
-	tok, err := sagin.Login("sys_user:9001")
+	tok, err := sagin.Login("sys_user-9001")
 	if err != nil {
 		t.Fatalf("登录失败: %v", err)
 	}
 	if msg, ok := Verify(tok); !ok {
 		t.Fatalf("新登录应有效, 却得 %q", msg)
 	}
-	if err := sagin.Kickout("sys_user:9001"); err != nil {
+	if err := sagin.Kickout("sys_user-9001"); err != nil {
 		t.Fatalf("踢人失败: %v", err)
 	}
 	msg, ok := Verify(tok)
@@ -77,7 +77,7 @@ func TestVerifyKickOut(t *testing.T) {
 
 func TestVerifyBeReplaced(t *testing.T) {
 	setupMgr(t)
-	tok, err := sagin.Login("sys_user:9002", "pc")
+	tok, err := sagin.Login("sys_user-9002", "pc")
 	if err != nil {
 		t.Fatalf("登录失败: %v", err)
 	}

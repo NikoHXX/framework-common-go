@@ -4,9 +4,6 @@ import "fmt"
 
 // ProviderConfig 单个三方平台的配置，对应 yaml 的 social.type.<source>。
 //
-// 字段只保留已接入平台用得上的五项。Java SocialLoginConfigProperties 还有
-// unionId/tenantId/agentId/alipayPublicKey 等未接入平台专属参数，接入时再补。
-//
 // mapstructure 标签是给调用方的 viper 用的；本包不 import viper，
 // 默认值铺不铺都不影响解析——整段留空时 Type 为 nil map，按「无可用平台」处理。
 type ProviderConfig struct {
@@ -29,7 +26,7 @@ func (c ProviderConfig) configured() bool {
 
 // Config 三方登录配置，对应 yaml 的 social 段。
 type Config struct {
-	// Type 按平台标识(gitee/github/maxkey/topiam)索引的配置表。
+	// Type 按平台标识(wechat_open/dingtalk/feishu/qq/gitee/github/maxkey/topiam)索引的配置表。
 	Type map[string]ProviderConfig `mapstructure:"type"`
 }
 

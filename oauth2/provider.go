@@ -25,15 +25,40 @@ type provider interface {
 }
 
 // builtinProviders 全部平台实现。与配置无关，是否可用由 New 按配置筛。
-//
-// 加平台：照 provider_gitee.go / provider_github.go(固定端点) 或
-// provider_maxkey.go / provider_topiam.go(私有化部署，端点由 serverUrl 拼出)
-// 新建一个 provider_<平台>.go，实现 provider 的两个方法，再在此登记。
 var builtinProviders = map[string]provider{
-	SourceGitee:  giteeProvider{},
-	SourceGithub: githubProvider{},
-	SourceMaxkey: maxkeyProvider{},
-	SourceTopiam: topiamProvider{},
+	SourceGitee:      giteeProvider{},
+	SourceGithub:     githubProvider{},
+	SourceMaxkey:     maxkeyProvider{},
+	SourceTopiam:     topiamProvider{},
+	SourceWechatOpen: wechatOpenProvider{},
+	SourceDingtalk:   dingtalkProvider{},
+	SourceFeishu:     feishuProvider{},
+	SourceQQ:         qqProvider{},
+}
+
+// tokenExchanger 非标准换票（微信/钉钉/飞书/QQ 等），可选实现。
+type tokenExchanger interface {
+	exchange(ctx context.Context, cfg ProviderConfig, client *http.Client, code string) (*xoauth2.Token, error)
+}
+
+// authorizeBuilder 非标准授权 URL（参数名/片段与 RFC 不完全一致），可选实现。
+type authorizeBuilder interface {
+	authorizeURL(cfg ProviderConfig, state string) (string, error)
+}
+
+// normalizeSource 统一别名，对齐前端/JustAuth 常见写法。
+func normalizeSource(source string) string {
+	s := strings.ToLower(strings.TrimSpace(source))
+	switch s {
+	case "wechat", "weixin":
+		return SourceWechatOpen
+	case "lark":
+		return SourceFeishu
+	case "dingding", "dingtalk_v2":
+		return SourceDingtalk
+	default:
+		return s
+	}
 }
 
 // getJSON 带令牌请求一个返回 JSON 的接口并解码进 dest。

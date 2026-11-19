@@ -12,6 +12,7 @@ import (
 
 	"github.com/NikoHXX/framework-common-go/framework-core/errs"
 	"github.com/NikoHXX/framework-common-go/framework-core/model/response"
+	"github.com/NikoHXX/framework-common-go/framework-core/utils/loginhelper"
 )
 
 // 登录态失效的提示文案，与 Java SaTokenExceptionHandler 按 NotLoginException.getType()
@@ -39,16 +40,24 @@ func CheckLogin() gin.HandlerFunc {
 
 // Guard 校验当前请求的登录态，失效时登记 401 业务错误并 Abort，返回 false。
 // 供 permission 等需要在自身逻辑前先过登录校验的中间件复用。
+// 登录通过后继续校验 clientid 绑定与客户端路径/IP 白名单，对齐 Java AuthFilter。
 func Guard(c *gin.Context) bool {
 	// token 由组级 TokenInterceptor 解析后写入 ctx，未挂该中间件时恒为空。
-	msg, ok := Verify(sagin.GetTokenFromCtx(c))
-	if ok {
-		return true
+	token := sagin.GetTokenFromCtx(c)
+	msg, ok := Verify(token)
+	if !ok {
+		log.Printf("[satoken] 请求地址'%s',认证失败'%s',无法访问系统资源", c.Request.URL.Path, msg)
+		_ = c.Error(errs.New(response.CodeUnauthorized, msg, "登录态校验失败"))
+		c.Abort()
+		return false
 	}
-	log.Printf("[satoken] 请求地址'%s',认证失败'%s',无法访问系统资源", c.Request.URL.Path, msg)
-	_ = c.Error(errs.New(response.CodeUnauthorized, msg, "登录态校验失败"))
-	c.Abort()
-	return false
+	if msg, ok := loginhelper.ValidateClientBinding(c.Request, token); !ok {
+		log.Printf("[satoken] 请求地址'%s',认证失败'%s',无法访问系统资源", c.Request.URL.Path, msg)
+		_ = c.Error(errs.New(response.CodeUnauthorized, msg, "客户端约束校验失败"))
+		c.Abort()
+		return false
+	}
+	return true
 }
 
 // Verify 校验 token 的登录态，失败时返回对应的提示文案。

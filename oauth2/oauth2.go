@@ -27,6 +27,7 @@ import (
 	"maps"
 	"net/http"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -34,11 +35,16 @@ import (
 )
 
 // 已接入的平台标识。取值即前端传来的 source，也是落库的 source 值。
+// 大厂对齐：微信/钉钉/飞书/QQ/Gitee/GitHub；maxkey/topiam 为私有化 SSO 保留。
 const (
-	SourceGitee  = "gitee"
-	SourceGithub = "github"
-	SourceMaxkey = "maxkey"
-	SourceTopiam = "topiam"
+	SourceGitee      = "gitee"
+	SourceGithub     = "github"
+	SourceMaxkey     = "maxkey"
+	SourceTopiam     = "topiam"
+	SourceWechatOpen = "wechat_open"
+	SourceDingtalk   = "dingtalk"
+	SourceFeishu     = "feishu"
+	SourceQQ         = "qq"
 )
 
 // ErrUnsupportedSource 平台未接入或配置不全。
@@ -106,19 +112,27 @@ func New(cfg Config, store StateStore) (*Manager, error) {
 		return nil, errors.New("oauth2: StateStore 不能为空")
 	}
 
-	entries := make(map[string]entry, len(builtinProviders))
-	for source, p := range builtinProviders {
-		pc, ok := cfg.Type[source]
-		if !ok || !pc.configured() {
+	entries := make(map[string]entry, len(cfg.Type))
+	for rawSource, pc := range cfg.Type {
+		if !pc.configured() {
 			continue
 		}
-		// 让 provider 自查其余必填项(如私有化部署的 serverUrl)，
-		// 不合格的当场剔除，免得留到运行期才报错。
+		canonical := normalizeSource(rawSource)
+		p, ok := builtinProviders[canonical]
+		if !ok {
+			log.Printf("[oauth2] 平台 %s 未接入，已跳过", rawSource)
+			continue
+		}
 		if _, err := p.oauthConfig(pc); err != nil {
-			log.Printf("[oauth2] 平台 %s 配置无效，已跳过: %v", source, err)
+			log.Printf("[oauth2] 平台 %s 配置无效，已跳过: %v", rawSource, err)
 			continue
 		}
-		entries[source] = entry{provider: p, cfg: pc}
+		ent := entry{provider: p, cfg: pc}
+		entries[canonical] = ent
+		// 别名也可查（如 wechat → wechat_open）。
+		if rawSource != canonical {
+			entries[strings.ToLower(strings.TrimSpace(rawSource))] = ent
+		}
 	}
 
 	log.Printf("[oauth2] 已就绪: 可用平台=%v", slices.Sorted(maps.Keys(entries)))
@@ -127,11 +141,14 @@ func New(cfg Config, store StateStore) (*Manager, error) {
 
 // lookup 取平台实现与其配置，未就绪时返回 ErrUnsupportedSource。
 func (m *Manager) lookup(source string) (entry, error) {
-	e, ok := m.entries[source]
-	if !ok {
-		return entry{}, ErrUnsupportedSource
+	key := strings.ToLower(strings.TrimSpace(source))
+	if e, ok := m.entries[key]; ok {
+		return e, nil
 	}
-	return e, nil
+	if e, ok := m.entries[normalizeSource(source)]; ok {
+		return e, nil
+	}
+	return entry{}, ErrUnsupportedSource
 }
 
 // AuthorizeURL 生成授权跳转地址，并把 state 存起来待回调校验。
@@ -142,14 +159,18 @@ func (m *Manager) AuthorizeURL(ctx context.Context, source string) (string, erro
 	if err != nil {
 		return "", err
 	}
-	oc, err := e.provider.oauthConfig(e.cfg)
-	if err != nil {
-		return "", err
-	}
 
 	state := uuid.NewString()
 	if err := m.store.Save(ctx, state, stateTTL); err != nil {
 		return "", fmt.Errorf("oauth2: 缓存 state 失败: %w", err)
+	}
+
+	if ab, ok := e.provider.(authorizeBuilder); ok {
+		return ab.authorizeURL(e.cfg, state)
+	}
+	oc, err := e.provider.oauthConfig(e.cfg)
+	if err != nil {
+		return "", err
 	}
 	return oc.AuthCodeURL(state), nil
 }
@@ -170,14 +191,17 @@ func (m *Manager) Callback(ctx context.Context, source, code, state string) (*Au
 		return nil, err
 	}
 
-	oc, err := e.provider.oauthConfig(e.cfg)
-	if err != nil {
-		return nil, err
-	}
-
 	client := &http.Client{Timeout: httpTimeout}
-	// 把 client 交给 x/oauth2 走令牌交换，超时设置才对 Exchange 生效。
-	tok, err := oc.Exchange(context.WithValue(ctx, xoauth2.HTTPClient, client), code)
+	var tok *xoauth2.Token
+	if ex, ok := e.provider.(tokenExchanger); ok {
+		tok, err = ex.exchange(ctx, e.cfg, client, code)
+	} else {
+		oc, oerr := e.provider.oauthConfig(e.cfg)
+		if oerr != nil {
+			return nil, oerr
+		}
+		tok, err = oc.Exchange(context.WithValue(ctx, xoauth2.HTTPClient, client), code)
+	}
 	if err != nil {
 		return nil, fmt.Errorf("oauth2: %s 换取令牌失败: %w", source, err)
 	}
@@ -208,6 +232,12 @@ func tokenFrom(tok *xoauth2.Token) AuthToken {
 	}
 	if s, ok := tok.Extra("id_token").(string); ok {
 		at.IDToken = s
+	}
+	if s, ok := tok.Extra("openid").(string); ok {
+		at.OpenID = s
+	}
+	if s, ok := tok.Extra("unionid").(string); ok {
+		at.UnionID = s
 	}
 	// Expiry 零值表示平台未给有效期(如 github)，此时 ExpireIn 留 0。
 	if !tok.Expiry.IsZero() {
