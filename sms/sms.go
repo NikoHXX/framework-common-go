@@ -1,7 +1,7 @@
 // Package sms 大厂商短信发送工具（对齐 sms4j 请求契约）。
 //
 // 职责仅限「凭据 + 模板码 → 调厂商网关」；模板缓存、默认厂商、发送记录由业务层负责。
-// 已实现：alibaba / tencent / yunpian / huawei。管理端下拉仍可列全量厂商，未实现者 NewSender 返回 ErrUnsupportedSupplier。
+// 已对接：alibaba / tencent / yunpian / huawei；下拉与 NewSender 共用同一枚举表。
 package sms
 
 import (
@@ -70,12 +70,17 @@ func NewSender(supplier string, cred Credentials) (Sender, error) {
 	}
 }
 
-// SupportedSuppliers 当前已实现发信的厂商 code。
+// SupportedSuppliers 已对接厂商 code（与 SupplierSelectList 同源）。
 func SupportedSuppliers() []string {
-	return []string{SupplierAlibaba, SupplierTencent, SupplierYunpian, SupplierHuawei}
+	list := SupplierSelectList()
+	out := make([]string, 0, len(list))
+	for _, o := range list {
+		out = append(out, o.Value)
+	}
+	return out
 }
 
-// IsSupported 是否已实现发信。
+// IsSupported 是否已对接发信。
 func IsSupported(supplier string) bool {
 	supplier = strings.ToLower(strings.TrimSpace(supplier))
 	for _, s := range SupportedSuppliers() {

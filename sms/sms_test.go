@@ -23,11 +23,15 @@ func TestNewSenderUnsupported(t *testing.T) {
 
 func TestSupplierSelectList(t *testing.T) {
 	list := SupplierSelectList()
-	if len(list) < 20 {
-		t.Fatalf("too few suppliers: %d", len(list))
+	if len(list) != 4 {
+		t.Fatalf("want 4 integrated suppliers, got %d", len(list))
 	}
 	if SupplierLabel("alibaba") != "阿里" {
 		t.Fatalf("label alibaba = %q", SupplierLabel("alibaba"))
+	}
+	supported := SupportedSuppliers()
+	if len(supported) != len(list) {
+		t.Fatalf("SupportedSuppliers=%d SelectList=%d", len(supported), len(list))
 	}
 }
 
